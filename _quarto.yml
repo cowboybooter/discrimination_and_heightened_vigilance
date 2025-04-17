@@ -14,10 +14,8 @@ project:
     - "!bibliography/"
 
 author:
-  - name: Aaron Gullickson
-    orcid: 0000-0001-7237-8131
-    email: aarong@uoregon.edu
-    url: https://aarongullickson.netlify.app/
+  - name: Calista Gerard
+    email: cgerard@uoregon.edu
     attributes:
       corresponding: true
     affiliations:
