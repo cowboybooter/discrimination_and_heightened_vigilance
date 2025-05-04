@@ -1,0 +1,202 @@
+Samples selected:
+      2023 NHIS
+File Type:                    rectangular
+Case Selection:               No
+  Variable                         Columns        Len   2023    
+  SERIAL                       H   1-6            6     X       
+  STRATA                       H   7-10           4     X       
+  PSU                          H  11-13           3     X       
+  NHISHID                      H  14-27          14     X       
+  PERNUM                       P  28-29           2     X       
+  NHISPID                      P  30-45          16     X       
+  HHX                          P  46-52           7     X       
+  SAMPWEIGHT                   P  53-64          12     X       
+  ASTATFLG                     P  65              1     X       
+  CSTATFLG                     P  66              1     X       
+  AGE                          P  67-69           3     X       
+  SEX                          P  70              1     X       
+  SEXORIEN                     P  71              1     X       
+  MARSTCUR                     P  72              1     X       
+  PHQSCREEN                    P  73              1     X       
+  DISRESPCT                    P  74              1     X       
+  DISSERV                      P  75              1     X       
+  DISSMART                     P  76              1     X       
+  DISFEAR                      P  77              1     X       
+  DISTHREAT                    P  78              1     X       
+  VIGINSULT                    P  79              1     X       
+  VIGAPPEAR                    P  80              1     X       
+  VIGSAY                       P  81              1     X       
+  VIGAVOID                     P  82              1     X       
+
+Variable Availability Key:
+All Years X - available in this sample
+All Years . - not available in this sample
+
+RECTYPE   Record type
+H         Household
+P         Person
+I         Injury
+X         Condition
+D         Dr. visits
+A         Hospital record
+M         Prescribed medicine
+O         Non-prescribed medicine
+S         X-ray record
+Z         Poison record
+V         Motor vehicle person accident
+G         Pregnancy
+Y         Soa/condtion
+L         Vitamin/mineral
+B         Disability condition
+
+ASTATFLG            Sample adult flag
+0                   NIU
+1                   Sample adult, has record
+2                   Sample adult, no record
+3                   Not selected as sample adult
+4                   No one selected as sample adult
+5                   Armed forces member
+6                   AF member, selected as sample adult
+
+CSTATFLG            Sample child flag
+0                   NIU
+1                   Sample child-has record
+2                   Sample child-no record
+3                   Not selected as sample child
+4                   No one selected as sample child
+5                   Emancipated minor
+
+SEX                 Sex
+1                   Male
+2                   Female
+7                   Unknown-refused
+8                   Unknown-not ascertained
+9                   Unknown-don't know
+
+SEXORIEN            Sexual orientation
+0                   NIU
+1                   Lesbian or gay
+2                   Straight, that is, not lesbian or gay
+3                   Bisexual
+4                   Something else
+5                   I don't know the answer
+7                   Unknown-refused
+8                   Unknown-not ascertained
+
+MARSTCUR            Current marital status
+0                   NIU
+1                   Married, spouse present
+2                   Married, spouse absent
+3                   Married, spouse in household unknown
+4                   Separated
+5                   Divorced
+6                   Widowed
+7                   Living with partner
+8                   Never married
+9                   Unknown marital status
+
+PHQSCREEN           PHQ-2 screener result
+1                   Positive
+2                   Negative
+8                   Not ascertained
+9                   NIU
+
+DISRESPCT           How often treated with less courtesy or respect
+0                   NIU
+1                   At least once a week
+2                   A few times a month
+3                   A few times a year
+4                   Less than once a year
+5                   Never
+7                   Unknown - refused
+8                   Unknown - not ascertained
+9                   Unknown - don't know
+
+DISSERV             How often receive poor service at restaurant or store
+0                   NIU
+1                   At least once a week
+2                   A few times a month
+3                   A few times a year
+4                   Less than once a year
+5                   Never
+7                   Unknown - refused
+8                   Unknown - not ascertained
+9                   Unknown - don't know
+
+DISSMART            How often treated as not smart
+0                   NIU
+1                   At least once a week
+2                   A few times a month
+3                   A few times a year
+4                   Less than once a year
+5                   Never
+7                   Unknown - refused
+8                   Unknown - not ascertained
+9                   Unknown - don't know
+
+DISFEAR             How often people act afraid of you
+0                   NIU
+1                   At least once a week
+2                   A few times a month
+3                   A few times a year
+4                   Less than once a year
+5                   Never
+7                   Unknown - refused
+8                   Unknown - not ascertained
+9                   Unknown - don't know
+
+DISTHREAT           How often threatend or harassed
+0                   NIU
+1                   At least once a week
+2                   A few times a month
+3                   A few times a year
+4                   Less than once a year
+5                   Never
+7                   Unknown - refused
+8                   Unknown - not ascertained
+9                   Unknown - don't know
+
+VIGINSULT           How often prepare for possible insults
+0                   NIU
+1                   At least once a week
+2                   A few times a month
+3                   A few times a year
+4                   Less than once a year
+5                   Never
+7                   Unknown - refused
+8                   Unknown - not ascertained
+9                   Unknown - don't know
+
+VIGAPPEAR           How often careful about appearance
+0                   NIU
+1                   At least once a week
+2                   A few times a month
+3                   A few times a year
+4                   Less than once a year
+5                   Never
+7                   Unknown - refused
+8                   Unknown - not ascertained
+9                   Unknown - don't know
+
+VIGSAY              How often watch what you say
+0                   NIU
+1                   At least once a week
+2                   A few times a month
+3                   A few times a year
+4                   Less than once a year
+5                   Never
+7                   Unknown - refused
+8                   Unknown - not ascertained
+9                   Unknown - don't know
+
+VIGAVOID            How often avoid certain situations and places
+0                   NIU
+1                   At least once a week
+2                   A few times a month
+3                   A few times a year
+4                   Less than once a year
+5                   Never
+7                   Unknown - refused
+8                   Unknown - not ascertained
+9                   Unknown - don't know
+

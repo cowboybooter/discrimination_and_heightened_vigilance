@@ -11,3 +11,49 @@ source(here("utils","functions.R"))
 ```
 
 This quarto doc is used to organize the data.
+
+Reading the National Health Interview Survey into R
+```{r}
+#| label: loading data
+#| include: false
+
+nhis <- read_fwf(here("data", "data_raw", "nhis_00001.dat.gz"),
+                 col_positions = fwf_cols(serial = c(1,6),
+                                          strata = c(7,10),
+                                          psu = c(11,13),
+                                          nhishid = c(14,27),
+                                          pernum = c(28,29),
+                                          nishpid = c(30,45),
+                                          hhx = c(46,52),
+                                          sampweight = c(53,64),
+                                          astatflg = 65,
+                                          cstatflg = 66,
+                                          age = c(67,69),
+                                          sex = 70,
+                                          sexorien = 71,
+                                          marstcur = 72,
+                                          phqscreen = 73,
+                                          disrespct = 74,
+                                          disserv = 75,
+                                          dissmart = 76,
+                                          disfear = 77,
+                                          disthreat = 78,
+                                          viginsult = 79,
+                                          vigappear = 80,
+                                          vigsay = 81,
+                                          vigavoid = 82),
+                 col_types = c(nhishid = 'c',
+                               nishpid = 'c',
+                               .default = 'i'),
+                 show_col_types = FALSE)
+  
+```
+
+Saving [To Be CLEANED] data as RData
+```{r}
+#| saving data as nhis.RData
+#| include: false
+
+save(nhis, file = here("data", "nhis.RData"))
+
+```
