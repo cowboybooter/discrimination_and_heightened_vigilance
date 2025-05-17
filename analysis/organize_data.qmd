@@ -49,7 +49,37 @@ nhis <- read_fwf(here("data", "data_raw", "nhis_00001.dat.gz"),
   
 ```
 
-Saving [To Be CLEANED] data as RData
+Cleaning data 
+
+This tidy dataset contains...
+   -dependent variables:
+   -key independent variables:
+   -a few important covariates: 
+   
+```{r}
+#| label: clean data
+#| include: true
+
+
+```
+
+Dealing with Missing Values
+```{r}
+#| label: Deals with missing values
+#| include: true
+
+
+```
+
+Transforming variables
+```{r}
+#| label: transforms variables
+#| include: true
+
+
+```
+
+Saving data as RData
 ```{r}
 #| saving data as nhis.RData
 #| include: false

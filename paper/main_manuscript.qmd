@@ -38,7 +38,11 @@ This quarto doc is for writing the manuscript. This is a test citation [@alba199
 
 # Data and Methods
 
-[TODO: Write data description, including information on how the data were collected, when the data were collected, the size of the dataset, and its generalizability. It may also include further information specific to each data source. ]
+The data used in this paper were extracted from the [National Health Interview Survey](https://nhis.ipums.org/nhis/), via IPUMS Health Survey.
+The data were usually conducted in-person, at 2,500 residences in each geographically clustered areas,
+for a representative sample of the United States. The data were conducted year-round, with a nationally representative sample
+collected monthly. The data were self-reported by the participants. Additionally, the data are generalizable to the
+national level after correcting for aspects of research design, including the strata and PSUs.
 
 # Results
 
