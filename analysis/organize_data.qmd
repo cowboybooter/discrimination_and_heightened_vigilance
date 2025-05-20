@@ -54,6 +54,6 @@ Saving [To Be CLEANED] data as RData
 #| saving data as nhis.RData
 #| include: false
 
-save(nhis, file = here("data", "nhis.RData"))
+save(nhis, file = here("data", "data_constructed", "nhis.RData"))
 
 ```
