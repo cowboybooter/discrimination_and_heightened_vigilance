@@ -11,3 +11,147 @@ source(here("utils","functions.R"))
 ```
 
 This quarto doc is used to analyze the data.
+
+```{r}
+#| label: data_import
+#| include: false
+
+load(here("data","nhis.RData"))
+```
+
+# Creating Analytical Dataset 
+
+Exploratory stuff about the data
+
+```{r}
+#| label: are_kids_asked_about_disrespect_vig
+#| include: true
+
+# table(nhis$sample_flag, nhis$disrespct)
+no_kids <- nhis |>
+  filter(sample_flag == "Sample adult, has record")
+# which(is.na(no_kids))
+# Selecting rows with NA values using complete.cases
+columns_with_na <- no_kids[!complete.cases(no_kids), ]
+columns_with_na
+
+
+```
+
+Case-wise deletion of not ascertained or refused and or "don't know"
+  - number of observations (without kids) = 29522
+  - number of obs with casewise deletion of not asertained or refused = 28577
+  - number of obs with casewise deletion of all 3 = 28202 (loss of about 1300 observations)
+  
+
+```{r}
+#| label: casewise_deletion
+
+n_no_kids <- length(no_kids$serial)
+table(no_kids$disrespct)
+no_kids[no_kids == "Unknown - not ascertained"] <- NA
+no_kids[no_kids == "Unknown - refused"] <- NA
+
+unique(no_kids$disrespct)
+table(no_kids$disrespct)
+no_kids_no_unk <- na.omit(no_kids)
+n_no_kids_no_unk <- length(no_kids_no_unk$serial)
+n_no_kids_no_unk
+
+no_kids[no_kids == "Unknown - don't know"] <- NA
+total_casewise_deletion <- na.omit(no_kids)
+n_total_casewise_deletion <- total_casewise_deletion$serial
+
+nhis <- total_casewise_deletion
+```
+```{r}
+#| label: age_issues
+#| include: true
+
+ggplot(data = nhis, aes(x = age))+
+  geom_histogram()
+
+nhis <- nhis |>
+  filter(age < 100 & age > 17)
+```
+```{r}
+#| label: transforms variables
+#| include: true
+
+nhis <- nhis|>
+  mutate(sex = factor(x = sex, levels = c("male", "female")),
+         sexual_orientation = factor(sexual_orientation, levels = c("Lesbian or gay",
+                                                                    "Straight, that is, not lesbian or gay",
+                                                                    "Bisexual",
+                                                                    "Something else")),
+         hisprace = factor(hisprace, levels = c("Hispanic", 
+                                                "Non-Hispanic White",
+                                                "Non-Hispanic Black/African American",
+                                                "Non-Hispanic Asian",
+                                                "Non-Hispanic American Indian/Alaskan Native",
+                                                "Non-Hispanic American Indian/Alaskan Native and any other group",
+                                                "Non-Hispanic Other single and multiple races")),
+         phq2_screener_result = factor(phq2_screener_result, levels = c("Negative", "Positive")),
+         
+         # Discrimination
+         disrespct = factor(disrespct, levels = c("Never",
+                                                  "Less than once a year",
+                                                  "A few times a year",
+                                                  "A few times a month",
+                                                  "At least once a week")),
+         disserv = factor(disserv, levels = c("Never",
+                                              "Less than once a year",
+                                              "A few times a year",
+                                              "A few times a month",
+                                              "At least once a week")),
+         dissmart = factor(dissmart, levels = c("Never",
+                                                "Less than once a year",
+                                                "A few times a year",
+                                                "A few times a month",
+                                                "At least once a week")),
+         disfear = factor(disfear, levels = c("Never",
+                                            "Less than once a year",
+                                            "A few times a year",
+                                            "A few times a month",
+                                            "At least once a week")),
+         disthreat = factor(disthreat, levels = c("Never",
+                                                  "Less than once a year",
+                                                  "A few times a year",
+                                                  "A few times a month",
+                                                  "At least once a week")),
+         # Vigilence
+         viginsult = factor(viginsult, levels = c("Never",
+                                                  "Less than once a year",
+                                                  "A few times a year",
+                                                  "A few times a month",
+                                                  "At least once a week")),
+         vigappear = factor(vigappear, levels = c("Never",
+                                                  "Less than once a year",
+                                                  "A few times a year",
+                                                  "A few times a month",
+                                                  "At least once a week")),
+         
+         
+         vigsay = factor(vigsay, levels = c("Never",
+                                            "Less than once a year",
+                                            "A few times a year",
+                                            "A few times a month",
+                                            "At least once a week")),
+         vigavoid = factor(vigavoid, levels = c("Never",
+                                                "Less than once a year",
+                                                "A few times a year",
+                                                "A few times a month",
+                                                "At least once a week")),
+  )
+
+
+```
+
+
+```{r}
+#| label: exploring_covariance
+#| include: true
+
+c1 <- cor(nhis)
+symnum(c1)
+```

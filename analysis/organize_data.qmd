@@ -17,31 +17,33 @@ Reading the National Health Interview Survey into R
 #| label: loading data
 #| include: false
 
-nhis <- read_fwf(here("data", "data_raw", "nhis_00001.dat.gz"),
-                 col_positions = fwf_cols(serial = c(1,6),
-                                          strata = c(7,10),
-                                          psu = c(11,13),
-                                          nhishid = c(14,27),
-                                          pernum = c(28,29),
-                                          nishpid = c(30,45),
-                                          hhx = c(46,52),
-                                          sampweight = c(53,64),
-                                          astatflg = 65,
-                                          cstatflg = 66,
-                                          age = c(67,69),
-                                          sex = 70,
-                                          sexorien = 71,
-                                          marstcur = 72,
-                                          phqscreen = 73,
-                                          disrespct = 74,
-                                          disserv = 75,
-                                          dissmart = 76,
-                                          disfear = 77,
-                                          disthreat = 78,
-                                          viginsult = 79,
-                                          vigappear = 80,
-                                          vigsay = 81,
-                                          vigavoid = 82),
+nhis <- read_fwf(here("data", "data_raw", "nhis_00002.dat.gz"),
+                 col_positions = fwf_cols(year = c(1,4),
+                                          serial = c(5,10),
+                                          strata = c(11,14),
+                                          psu = c(15,17),
+                                          nhishid = c(18,31),
+                                          # pernum = c(32,33), # not in codebook
+                                          nishpid = c(34,49),
+                                          # hhx = c(50,56), # all NA, not in codebook
+                                          sampweight = c(57,68),
+                                          astatflg = 69,
+                                          cstatflg = 70,
+                                          age = c(71,73),
+                                          sex = 74,
+                                          sexorien = 75,
+                                          # marstcur = 76,
+                                          hisprace = c(77,78),
+                                          phqscreen = 79,
+                                          disrespct = 80,
+                                          disserv = 81,
+                                          dissmart = 82,
+                                          disfear = 83,
+                                          disthreat = 84,
+                                          viginsult = 85,
+                                          vigappear = 86,
+                                          vigsay = 87,
+                                          vigavoid = 88),
                  col_types = c(nhishid = 'c',
                                nishpid = 'c',
                                .default = 'i'),
@@ -56,34 +58,256 @@ This tidy dataset contains...
    -key independent variables:
    -a few important covariates: 
    
+Note: NIU means "Not in Universe" and stuctural skip
+   
 ```{r}
 #| label: clean data
 #| include: true
+
+nhis <-nhis|>
+  mutate(sample_flag = case_when(astatflg == 0 & cstatflg == 0 ~ NA, # NIU
+                                 astatflg == 0 & cstatflg == 1 ~ "Sample child-has record",
+                                 astatflg == 0 & cstatflg == 2 ~ 'Sample child-no record',
+                                 astatflg == 0 & cstatflg == 3 ~ "Not selected as sample child",
+                                 astatflg == 0 & cstatflg == 4 ~ "No one selected as sample child",
+                                 astatflg == 0 & cstatflg == 5 ~ "Emancipated minor",
+                                 cstatflg == 0 & astatflg == 1 ~ "Sample adult, has record",
+                                 cstatflg == 0 & astatflg == 2 ~ "Sample adult, no record",
+                                 cstatflg == 0 & astatflg == 3 ~ "Not selected as sample adult",
+                                 cstatflg == 0 & astatflg == 4 ~ "No one selected as sample adult",
+                                 cstatflg == 0 & astatflg == 5 ~ "Armed forces member",
+                                 cstatflg == 0 & astatflg == 6 ~ "AF member, selected as sample adult"),
+         sex = case_when(sex == 1 ~ "male",
+                         sex == 2 ~ "female",
+                         sex == 7 ~ "unknown-refused",
+                         sex == 8 ~ "unknown-not ascertained",
+                         sex == 9 ~ "unknown-don't know"),
+         sexual_orientation = case_when(sexorien == 0 ~  NA, # "NIU"
+                                        sexorien == 1 ~ "Lesbian or gay",
+                                        sexorien == 2 ~ "Straight, that is, not lesbian or gay",
+                                        sexorien == 3 ~ "Bisexual",
+                                        sexorien == 4 ~ "Something else",
+                                        sexorien == 5 ~ "I don't know the answer",
+                                        sexorien == 7 ~ "Unknown-refused",
+                                        sexorien == 8 ~ "Unknown-not ascertained"),
+         hisprace = case_when(hisprace == 01 ~ "Hispanic",
+                              hisprace == 02 ~ "Non-Hispanic White",
+                              hisprace == 03 ~ "Non-Hispanic Black/African American",
+                              hisprace == 04 ~ "Non-Hispanic Asian",
+                              hisprace == 05 ~ "Non-Hispanic American Indian/Alaskan Native",
+                              hisprace == 06 ~ "Non-Hispanic American Indian/Alaskan Native and any other group",
+                              hisprace == 07 ~ "Non-Hispanic Other single and multiple races",
+                              hisprace == 97 ~ "Unknown-refused",
+                              hisprace == 98 ~ "Unknown-not ascertained",
+                              hisprace == 99 ~ "Unknown-don't know"),
+         phq2_screener_result = case_when(phqscreen == 1 ~ "Positive",
+                                          phqscreen == 2 ~ "Negative",
+                                          phqscreen == 8 ~ "Not ascertained",
+                                          phqscreen == 9 ~ NA #"NIU"
+                                          ),
+         # Discrimination
+         disrespct = case_when(disrespct == 0 ~ NA, # NIU
+                               disrespct == 1 ~ "At least once a week",
+                               disrespct == 2 ~ "A few times a month",
+                               disrespct == 3 ~ "A few times a year",
+                               disrespct == 4 ~ "Less than once a year",
+                               disrespct == 5 ~ "Never",
+                               disrespct == 7 ~ "Unknown - refused",
+                               disrespct == 8 ~ "Unknown - not ascertained",
+                               disrespct == 9 ~ "Unknown - don't know"),
+         disserv = case_when(disserv == 0 ~ NA, # NIU
+                             disserv == 1 ~ "At least once a week",
+                             disserv == 2 ~ "A few times a month",
+                             disserv == 3 ~ "A few times a year",
+                             disserv == 4 ~ "Less than once a year",
+                             disserv == 5 ~ "Never",
+                             disserv == 7 ~ "Unknown - refused",
+                             disserv == 8 ~ "Unknown - not ascertained",
+                             disserv == 9 ~ "Unknown - don't know"),
+         dissmart = case_when(dissmart == 0 ~ NA, # NIU
+                              dissmart == 1 ~ "At least once a week",
+                              dissmart == 2 ~ "A few times a month",
+                              dissmart == 3 ~ "A few times a year",
+                              dissmart == 4 ~ "Less than once a year",
+                              dissmart == 5 ~ "Never",
+                              dissmart == 7 ~ "Unknown - refused",
+                              dissmart == 8 ~ "Unknown - not ascertained",
+                              dissmart == 9 ~ "Unknown - don't know"),
+         disfear = case_when(disfear == 0 ~ NA, # NIU
+                             disfear == 1 ~ "At least once a week",
+                             disfear == 2 ~ "A few times a month",
+                             disfear == 3 ~ "A few times a year",
+                             disfear == 4 ~ "Less than once a year",
+                             disfear == 5 ~ "Never",
+                             disfear == 7 ~ "Unknown - refused",
+                             disfear == 8 ~ "Unknown - not ascertained",
+                             disfear == 9 ~ "Unknown - don't know"),
+         disthreat = case_when(disthreat == 0 ~ NA, # NIU
+                               disthreat == 1 ~ "At least once a week",
+                               disthreat == 2 ~ "A few times a month",
+                               disthreat == 3 ~ "A few times a year",
+                               disthreat == 4 ~ "Less than once a year",
+                               disthreat == 5 ~ "Never",
+                               disthreat == 7 ~ "Unknown - refused",
+                               disthreat == 8 ~ "Unknown - not ascertained",
+                               disthreat == 9 ~ "Unknown - don't know"),
+         # Vigilence 
+         viginsult = case_when(viginsult == 0 ~ NA, # NIU
+                               viginsult == 1 ~ "At least once a week",
+                               viginsult == 2 ~ "A few times a month",
+                               viginsult == 3 ~ "A few times a year",
+                               viginsult == 4 ~ "Less than once a year",
+                               viginsult == 5 ~ "Never",
+                               viginsult == 7 ~ "Unknown - refused",
+                               viginsult == 8 ~ "Unknown - not ascertained",
+                               viginsult == 9 ~ "Unknown - don't know"),         
+         vigappear = case_when(vigappear == 0 ~ NA, # NIU
+                               vigappear == 1 ~ "At least once a week",
+                               vigappear == 2 ~ "A few times a month",
+                               vigappear == 3 ~ "A few times a year",
+                               vigappear == 4 ~ "Less than once a year",
+                               vigappear == 5 ~ "Never",
+                               vigappear == 7 ~ "Unknown - refused",
+                               vigappear == 8 ~ "Unknown - not ascertained",
+                               vigappear == 9 ~ "Unknown - don't know"),
+         vigsay = case_when(vigsay == 0 ~ NA, # NIU
+                            vigsay == 1 ~ "At least once a week",
+                            vigsay == 2 ~ "A few times a month",
+                            vigsay == 3 ~ "A few times a year",
+                            vigsay == 4 ~ "Less than once a year",
+                            vigsay == 5 ~ "Never",
+                            vigsay == 7 ~ "Unknown - refused",
+                            vigsay == 8 ~ "Unknown - not ascertained",
+                            vigsay == 9 ~ "Unknown - don't know"),
+         vigavoid = case_when(vigavoid == 0 ~ NA, # NIU
+                              vigavoid == 1 ~ "At least once a week",
+                              vigavoid == 2 ~ "A few times a month",
+                              vigavoid == 3 ~ "A few times a year",
+                              vigavoid == 4 ~ "Less than once a year",
+                              vigavoid == 5 ~ "Never",
+                              vigavoid == 7 ~ "Unknown - refused",
+                              vigavoid == 8 ~ "Unknown - not ascertained",
+                              vigavoid == 9 ~ "Unknown - don't know")
+  )|>
+  select(-year,-astatflg,-cstatflg,-sexorien, -phqscreen) # need to drop year, astatflg, cstatflg, sexorien, phqscreen,
+
+
 
 
 ```
 
 Dealing with Missing Values
+- observations with labeled as children are valid skips in data
+
 ```{r}
-#| label: Deals with missing values
+#| label: Deals with valid skips
 #| include: true
 
+# include only samples from adults
+nhis <- nhis |>
+  filter(sample_flag == "Sample adult, has record")
+```
+
+Dealing with missingness (other than valid skip)
+- for first pass, I exclude all of responces containing unknown reason agnositc
+
+```{r}
+#| label: Deals with other types of missingness
+#| include: true
+
+# case-wise deletion of not ascertained or refused
+nhis[nhis == "Unknown - not ascertained"] <- NA
+nhis[nhis == "Unknown - refused"] <- NA
+nhis[nhis == "Unknown - don't know"] <- NA
+nhis[nhis == "Not ascertained"] <- NA
+nhis <- na.omit(nhis)
+
+# dealing with out of range ages
+nhis <- nhis |>
+  filter(age < 100 & age > 17)
 
 ```
+  
 
 Transforming variables
 ```{r}
 #| label: transforms variables
 #| include: true
 
+nhis <- nhis|>
+  mutate(sex = factor(x = sex, levels = c("male", "female")),
+         sexual_orientation = factor(sexual_orientation, levels = c("Lesbian or gay",
+                                                                    "Straight, that is, not lesbian or gay",
+                                                                    "Bisexual",
+                                                                    "Something else")),
+         hisprace = factor(hisprace, levels = c("Hispanic", 
+                                                "Non-Hispanic White",
+                                                "Non-Hispanic Black/African American",
+                                                "Non-Hispanic Asian",
+                                                "Non-Hispanic American Indian/Alaskan Native",
+                                                "Non-Hispanic American Indian/Alaskan Native and any other group",
+                                                "Non-Hispanic Other single and multiple races")),
+         phq2_screener_result = factor(phq2_screener_result, levels = c("Negative", "Positive")),
+         
+         # Discrimination
+         disrespct = factor(disrespct, levels = c("Never",
+                                                  "Less than once a year",
+                                                  "A few times a year",
+                                                  "A few times a month",
+                                                  "At least once a week")),
+         disserv = factor(disserv, levels = c("Never",
+                                              "Less than once a year",
+                                              "A few times a year",
+                                              "A few times a month",
+                                              "At least once a week")),
+         dissmart = factor(dissmart, levels = c("Never",
+                                                "Less than once a year",
+                                                "A few times a year",
+                                                "A few times a month",
+                                                "At least once a week")),
+         disfear = factor(disfear, levels = c("Never",
+                                            "Less than once a year",
+                                            "A few times a year",
+                                            "A few times a month",
+                                            "At least once a week")),
+         disthreat = factor(disthreat, levels = c("Never",
+                                                  "Less than once a year",
+                                                  "A few times a year",
+                                                  "A few times a month",
+                                                  "At least once a week")),
+         # Vigilence
+         viginsult = factor(viginsult, levels = c("Never",
+                                                  "Less than once a year",
+                                                  "A few times a year",
+                                                  "A few times a month",
+                                                  "At least once a week")),
+         vigappear = factor(vigappear, levels = c("Never",
+                                                  "Less than once a year",
+                                                  "A few times a year",
+                                                  "A few times a month",
+                                                  "At least once a week")),
+         
+         
+         vigsay = factor(vigsay, levels = c("Never",
+                                            "Less than once a year",
+                                            "A few times a year",
+                                            "A few times a month",
+                                            "At least once a week")),
+         vigavoid = factor(vigavoid, levels = c("Never",
+                                                "Less than once a year",
+                                                "A few times a year",
+                                                "A few times a month",
+                                                "At least once a week")),
+  )
+
 
 ```
 
 Saving data as RData
 ```{r}
-#| saving data as nhis.RData
+#| saving data as analytical_data.RData
 #| include: false
 
-save(nhis, file = here("data", "nhis.RData"))
+save(nhis, file = here("data", "data_constructed", "analytical_data.RData"))
 
-```
+i```
