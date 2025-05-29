@@ -155,3 +155,32 @@ nhis <- nhis|>
 c1 <- cor(nhis)
 symnum(c1)
 ```
+
+```{r}
+#| label: exploring_covariance_manually
+#| include: true
+
+
+nhis |> 
+  select_if(is.factor)
+
+numeric <- nhis |>
+  select_if(is.factor)|>
+  mutate(
+    sex = as.numeric(sex),
+    hisprace = as.numeric(hisprace),
+    disrespct = as.numeric(disrespct),
+    disserv = as.numeric(disserv),
+    disfear = as.numeric(disfear),
+    disthreat = as.numeric(disthreat),
+    viginsult = as.numeric(viginsult),
+    vigappear = as.numeric(vigappear),
+    vigsay = as.numeric(vigsay),
+    vigavoid = as.numeric(vigavoid),
+    phq2_screener_result = as.numeric(phq2_screener_result),
+    sexual_orientation = as.numeric(sexual_orientation)
+    
+  )
+
+corrgram(numeric, upper.panel="panel.cor", order = TRUE)
+```
