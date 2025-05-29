@@ -229,7 +229,7 @@ nhis <- nhis |>
 ```
   
 
-Transforming variables
+Transforming variables into factor variables
 ```{r}
 #| label: transforms variables
 #| include: true
@@ -303,11 +303,20 @@ nhis <- nhis|>
 
 ```
 
+select data
+```{r}
+#| label: bare_bones_data
+#| include: true
+
+final_nhis <- nhis |>
+  select(phq2_screener_result, disrespct)
+```
+
 Saving data as RData
 ```{r}
 #| saving data as analytical_data.RData
 #| include: false
 
-save(nhis, file = here("data", "data_constructed", "analytical_data.RData"))
+save(final_nhis, file = here("data", "data_constructed", "analytical_data.RData"))
 
-i```
+```
