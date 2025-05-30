@@ -187,6 +187,7 @@ corrgram(numeric, upper.panel="panel.cor", order = TRUE)
 
 # Exploratory Analysis Stuff
 
+for sample dsegin stuff use survey package
 ```{r}
 #| label: load_data_again
 
