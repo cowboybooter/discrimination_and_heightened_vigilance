@@ -309,7 +309,7 @@ select data
 #| include: true
 
 final_nhis <- nhis |>
-  select(phq2_screener_result, disrespct)
+  select(strata, psu, sampweight, phq2_screener_result, disrespct)
 ```
 
 Saving data as RData

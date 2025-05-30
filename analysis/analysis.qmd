@@ -184,3 +184,13 @@ numeric <- nhis |>
 
 corrgram(numeric, upper.panel="panel.cor", order = TRUE)
 ```
+
+# Exploratory Analysis Stuff
+
+```{r}
+#| label: load_data_again
+
+load(here("data", "data_constructed", "analytical_data.RData"))
+```
+
+
