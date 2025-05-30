@@ -1,5 +1,5 @@
 ---
-title: "Research Analysis Notebook"
+title: "Organize Data Notebook"
 ---
 
 ```{r}
@@ -167,8 +167,6 @@ nhis |>
 numeric <- nhis |>
   select_if(is.factor)|>
   mutate(
-    sex = as.numeric(sex),
-    hisprace = as.numeric(hisprace),
     disrespct = as.numeric(disrespct),
     disserv = as.numeric(disserv),
     disfear = as.numeric(disfear),
@@ -177,9 +175,6 @@ numeric <- nhis |>
     vigappear = as.numeric(vigappear),
     vigsay = as.numeric(vigsay),
     vigavoid = as.numeric(vigavoid),
-    phq2_screener_result = as.numeric(phq2_screener_result),
-    sexual_orientation = as.numeric(sexual_orientation)
-    
   )
 
 corrgram(numeric, upper.panel="panel.cor", order = TRUE)
@@ -194,9 +189,4 @@ for sample dsegin stuff use survey package
 load(here("data", "data_constructed", "analytical_data.RData"))
 ```
 
-```{r}
-#| label: logit_model_without_survey_design_stuff
 
-model <- glm(phq2_screener_result ~ disrespct, data = final_nhis, family = binomial)
-summary(model)
-```
