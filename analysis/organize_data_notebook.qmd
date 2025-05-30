@@ -10,14 +10,8 @@ source(here("utils","check_packages.R"))
 source(here("utils","functions.R"))
 ```
 
-This quarto doc is used to analyze the data.
+This quarto doc is used to organize the data.
 
-```{r}
-#| label: data_import
-#| include: false
-
-load(here("data","nhis.RData"))
-```
 
 # Creating Analytical Dataset 
 
@@ -175,18 +169,28 @@ numeric <- nhis |>
     vigappear = as.numeric(vigappear),
     vigsay = as.numeric(vigsay),
     vigavoid = as.numeric(vigavoid),
-  )
+  )|>
+  select(disrespct, disserv, disfear, disthreat, viginsult, vigappear, vigsay, vigavoid)
 
 corrgram(numeric, upper.panel="panel.cor", order = TRUE)
 ```
 
-# Exploratory Analysis Stuff
 
-for sample dsegin stuff use survey package
+# Factor loading stuff
 ```{r}
-#| label: load_data_again
+numeric_r <- cor(numeric, use = "pairwise.complete.obs")
 
-load(here("data", "data_constructed", "analytical_data.RData"))
+fa1 <- fa(numeric_r, 1)
+fa2 <- fa(numeric_r, 2)
+fa3 <- fa(numeric_r, 3)
+fa4 <- fa(numeric_r, 4)
+
+# loadings(fa1)
+loadings(fa2)
+# loadings(fa3)
+# loadings(fa4)
+fa.diagram(fa2)
+
 ```
 
 

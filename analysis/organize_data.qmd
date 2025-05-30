@@ -303,18 +303,77 @@ nhis <- nhis|>
 
 ```
 
+
+Spliting the discrimination and heightened vigilence questions into two factors reduces cronbach's alpha.
+```{r}
+#| label: factor_loading
+
+numeric <- nhis |>
+  select_if(is.factor)|>
+  mutate(
+    disrespct = as.numeric(disrespct),
+    disserv = as.numeric(disserv),
+    disfear = as.numeric(disfear),
+    disthreat = as.numeric(disthreat),
+    viginsult = as.numeric(viginsult),
+    vigappear = as.numeric(vigappear),
+    vigsay = as.numeric(vigsay),
+    vigavoid = as.numeric(vigavoid),
+  )|>
+  select(disrespct, disserv, disfear, disthreat, viginsult, vigappear, vigsay, vigavoid)
+
+numeric_r <- cor(numeric, use = "pairwise.complete.obs")
+alpha(numeric_r)
+
+fa1 <- fa(numeric_r, 1)
+fa2 <- fa(numeric_r, 2)
+# fa3 <- fa(numeric_r, 3)
+fa.diagram(fa1)
+fa.diagram(fa2)
+
+# based on factor analysis, the variables disrespct, disserv, disfear, disthreat, viginsult load onto one factor
+# while the remaining vigilence questions load onto another
+factor_1 <- numeric|>
+  select(-vigappear,-vigsay,-viginsult)
+alpha(cor(factor_1))
+```
+```{r}
+#| label: one_factor
+
+nhis$disrespct.z <- scale(as.numeric(nhis$disrespct)) 
+nhis$disserv.z <- scale(as.numeric(nhis$disserv))
+nhis$dissmart.z <- scale(as.numeric(nhis$dissmart))
+nhis$disfear.z <- scale(as.numeric(nhis$disfear))
+nhis$disthreat.z <- scale(as.numeric(nhis$disthreat))
+nhis$viginsult.z <- scale(as.numeric(nhis$viginsult))
+nhis$vigappear.z <- scale(as.numeric(nhis$vigappear))
+nhis$vigsay.z <- scale(as.numeric(nhis$vigsay))
+nhis$vigavoid.z <- scale(as.numeric(nhis$vigavoid))
+
+nhis$summated <- scale(nhis$disrespct.z+
+                         nhis$disserv.z+
+                         nhis$dissmart.z+
+                         nhis$disfear.z+
+                         nhis$disthreat.z+
+                         nhis$viginsult.z+
+                         nhis$vigappear.z+
+                         nhis$vigsay.z+
+                         nhis$vigavoid.z)
+```
+
 select data
 ```{r}
 #| label: bare_bones_data
 #| include: true
 
 final_nhis <- nhis |>
-  select(strata, psu, sampweight, phq2_screener_result, disrespct)
+  select(sex, hisprace, disrespct, disserv, dissmart, disfear, disthreat, 
+         viginsult, vigappear, vigsay, vigavoid, summated, phq2_screener_result)
 ```
 
 Saving data as RData
 ```{r}
-#| saving data as analytical_data.RData
+#| label: saving data as analytical_data.RData
 #| include: false
 
 save(final_nhis, file = here("data", "data_constructed", "analytical_data.RData"))
