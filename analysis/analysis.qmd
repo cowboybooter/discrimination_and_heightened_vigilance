@@ -196,5 +196,6 @@ load(here("data", "data_constructed", "analytical_data.RData"))
 ```{r}
 #| label: logit_model_without_survey_design_stuff
 
-glm(phq2_screener_result ~ disrespct, data = final_nhis, family = binomial)
+model <- glm(phq2_screener_result ~ disrespct, data = final_nhis, family = binomial)
+summary(model)
 ```
