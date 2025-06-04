@@ -188,8 +188,10 @@ nhis <-nhis|>
                               vigavoid == 7 ~ "Unknown - refused",
                               vigavoid == 8 ~ "Unknown - not ascertained",
                               vigavoid == 9 ~ "Unknown - don't know")
-  )|>
-  select(-year,-astatflg,-cstatflg,-sexorien, -phqscreen) # need to drop year, astatflg, cstatflg, sexorien, phqscreen,
+  )
+
+nhis <- nhis|>
+  dplyr::select(c(-year,-astatflg,-cstatflg,-sexorien, -phqscreen)) # need to drop year, astatflg, cstatflg, sexorien, phqscreen,
 
 
 
@@ -209,7 +211,7 @@ nhis <- nhis |>
 ```
 
 Dealing with missingness (other than valid skip)
-- for first pass, I exclude all of responces containing unknown reason agnositc
+- for first pass, I exclude all of responses containing unknown reason agnostic
 
 ```{r}
 #| label: Deals with other types of missingness
@@ -320,7 +322,7 @@ numeric <- nhis |>
     vigsay = as.numeric(vigsay),
     vigavoid = as.numeric(vigavoid),
   )|>
-  select(disrespct, disserv, disfear, disthreat, viginsult, vigappear, vigsay, vigavoid)
+  dplyr::select(disrespct, disserv, disfear, disthreat, viginsult, vigappear, vigsay, vigavoid)
 
 numeric_r <- cor(numeric, use = "pairwise.complete.obs")
 alpha(numeric_r)
@@ -334,7 +336,7 @@ fa.diagram(fa2)
 # based on factor analysis, the variables disrespct, disserv, disfear, disthreat, viginsult load onto one factor
 # while the remaining vigilence questions load onto another
 factor_1 <- numeric|>
-  select(-vigappear,-vigsay,-viginsult)
+  dplyr::select(-vigappear,-vigsay,-viginsult)
 alpha(cor(factor_1))
 ```
 ```{r}
@@ -361,14 +363,36 @@ nhis$summated <- scale(nhis$disrespct.z+
                          nhis$vigavoid.z)
 ```
 
+```{r}
+#| label: vigilance-summated
+
+nhis$vig_summated <- scale(nhis$viginsult.z+
+                             nhis$vigappear.z+
+                             nhis$vigsay.z+
+                             nhis$vigavoid.z)
+```
+
+```{r}
+#| label: discrimination-summated
+
+nhis$dis_summated <- scale(nhis$disrespct.z+
+                             nhis$disserv.z+
+                             nhis$dissmart.z+
+                             nhis$disfear.z)
+```
+
 select data
 ```{r}
 #| label: bare_bones_data
 #| include: true
 
 final_nhis <- nhis |>
-  select(sex, hisprace, disrespct, disserv, dissmart, disfear, disthreat, 
-         viginsult, vigappear, vigsay, vigavoid, summated, phq2_screener_result)
+  dplyr::select(sex, hisprace, sexual_orientation,
+         disrespct, disserv, dissmart, disfear, disthreat, 
+         viginsult, vigappear, vigsay, vigavoid, 
+         summated, vig_summated, dis_summated,
+         phq2_screener_result)|>
+  drop_na()
 ```
 
 Saving data as RData

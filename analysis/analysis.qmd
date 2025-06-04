@@ -14,13 +14,152 @@ This quarto doc is used to analyze the data.
 
 ```{r}
 #| label: loading-data
-
 load(here("data", "data_constructed", "analytical_data.RData"))
 ```
 
-```{r}
-#| label: logit_model_without_survey_design_stuff
+# Research Question:
+- How does discrimination affect depression risk?
 
-model <- glm(phq2_screener_result ~ disrespct, data = final_nhis, family = binomial)
-summary(model)
+# Data Exploration (?)
+- 6% of the data shows positive phq2 screener (and there for at 
+risk for depression)
+- for sexual orientation 95% of the respondents identified themselves as straight, while less than two percent of the population identified with the each of the remaining options
+-
+
+
+```{r}
+#| label: prop-tables
+
+prop.table(table(final_nhis$phq2_screener_result))
+
+prop.table(table(final_nhis$sexual_orientation))
+
+depressed_sample <- final_nhis|>
+  filter(phq2_screener_result == "Positive")
+
+prop.table(table(depressed_sample$sexual_orientation))
+
+table(final_nhis$phq2_screener_result, final_nhis$sex, final_nhis$hisprace, final_nhis$sexual_orientation)
+
+table(depressed_sample$sex, depressed_sample$sexual_orientation, depressed_sample$hisprace)
+```
+
+
+
+```{r}
+#| label: some-visualizations
+
+# Histogram of distribution of summated with fill as phq2 screener result
+ggplot(final_nhis, aes(x = summated, fill = phq2_screener_result))+
+  geom_histogram()+
+  theme_bw()
+
+ggplot(final_nhis, aes(x = summated, y = phq2_screener_result))+
+  geom_jitter()+
+  geom_point()+
+  theme_bw()
+
+ggplot(final_nhis, aes(x = dissmart, y = phq2_screener_result))+
+  geom_jitter()+
+  geom_point()+
+  theme_bw()
+
+ggplot(final_nhis, aes(x = vigavoid, y = phq2_screener_result))+
+  facet_wrap(~hisprace)+
+  geom_jitter()+
+  geom_point()+
+  theme_bw()
+
+ggplot(final_nhis, aes(x = summated, y = phq2_screener_result, color = sexual_orientation))+
+  facet_wrap(~hisprace)+
+  geom_jitter()
+
+ggplot(final_nhis, aes(x = vig_summated, y = dis_summated, color = phq2_screener_result))+
+  geom_point()+
+  geom_smooth()+
+  theme_bw()
+```
+```{r}
+#| label: co-linearity-visuals
+
+numeric <- final_nhis |>
+  mutate(
+    disrespct = as.numeric(disrespct),
+    disserv = as.numeric(disserv),
+    disfear = as.numeric(disfear),
+    disthreat = as.numeric(disthreat),
+    viginsult = as.numeric(viginsult),
+    vigappear = as.numeric(vigappear),
+    vigsay = as.numeric(vigsay),
+    vigavoid = as.numeric(vigavoid),
+  ) |>
+  select_if(is.numeric)
+
+corrgram(numeric, upper.panel="panel.cor", order = TRUE)
+```
+# Models
+
+```{r}
+#| label: logit_model_without_survey_design_stuff_dis_summated
+
+model <- glm(phq2_screener_result ~ dis_summated, data = final_nhis, family = binomial(logit))
+model1 <- glm(phq2_screener_result ~ dis_summated + sex + hisprace + sexual_orientation, data = final_nhis, family = binomial(logit))
+# model2 <- glm(phq2_screener_result ~ dis_summated*sex*hisprace*sexual_orientation, data = final_nhis, family = binomial(logit))
+modelsummary(list(model, model1), stars = TRUE)
+```
+
+```{r}
+#| label: logit_model_without_survey_design_stuff_summated
+
+model <- glm(phq2_screener_result ~ summated, data = final_nhis, family = binomial(logit))
+# model1 <- glm(phq2_screener_result ~ summated * hisprace, data = final_nhis, family = binomial(logit))
+model2 <- glm(phq2_screener_result ~ summated + sex + hisprace + sexual_orientation, data = final_nhis, family = binomial(logit))
+# model3 <- glm(phq2_screener_result ~ summated*sex*hisprace*sexual_orientation, data = final_nhis, family = binomial(logit))
+modelsummary(list(model, model2), stars = TRUE)
+```
+```{r}
+#| label: BIC-comparisons-scales
+model.demographics <- glm(phq2_screener_result ~ sex + sexual_orientation + hisprace, 
+                          data = final_nhis, family = binomial(logit))
+model.discrimination <- update(model.demographics, .~. + dis_summated)
+model.vigilence <- update(model.demographics, .~. + vig_summated)
+model.summated <- update(model.demographics, .~. + summated)
+
+modelsummary(list(model.demographics, model.discrimination, model.vigilence, model.summated),
+             stars = TRUE)
+
+```
+
+
+```{r}
+#| label: polytomous-models-cummulative-disrespect
+
+model <- polr(disrespct ~ sex, data = final_nhis)
+model1 <- update(model, .~. + sexual_orientation)
+
+modelsummary(list(model, model_1), stars = TRUE)
+```
+
+```{r}
+#| label: polytoumous-models-multinomial-sexual-orientation-nominal
+#| include: FALSE
+
+model <- multinom(sexual_orientation ~ summated, data = final_nhis)
+model1 <- update(model, .~. + hisprace)
+model2 <- update(model1, .~. + sex + sexual_orientation)
+
+modelsummary(list(model, model1, model2),
+             shape = term + statistic ~ model + response,
+             stars = TRUE)
+
+```
+
+
+```{r}
+#| label: poly-models-
+
+model <- polr(disthreat ~ phq2_screener_result, data = final_nhis)
+model1 <- update(model, .~. + sex + sexual_orientation + hisprace)
+
+modelsummary(list(model,model1), stars = TRUE)
 ```

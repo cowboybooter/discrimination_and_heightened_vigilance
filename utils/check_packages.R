@@ -11,7 +11,8 @@ packages = c(
   "readr","haven", # I/O
   "tidyverse","lubridate","broom", #tidyverse and friends
   "modelsummary","gt", # for table output
-  "corrgram", "psych" # for exploratory data org
+  "corrgram", "psych", # for exploratory data org
+  "MASS", "nnet" # for polytomous models
 )
 
 package.check <- lapply(packages, FUN = function(x) {
