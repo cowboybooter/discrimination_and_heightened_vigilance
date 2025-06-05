@@ -140,6 +140,24 @@ modelsummary(list(model.demographics, model.discrimination, model.vigilence, mod
 
 
 ```{r}
+library(marginaleffects)
+predict_baseline <- avg_predictions(model.demographics, variables = "hisprace") |>
+  as_tibble() |>
+  mutate(model = "baseline")
+
+predict_discrimination <- avg_predictions(model.discrimination, variables = "hisprace") |>
+  as_tibble() |>
+  mutate(model = "discrimination control")
+
+predict_baseline |>
+  bind_rows(predict_discrimination) |>
+  ggplot(aes(x = hisprace, y = estimate, color = model))+
+  geom_point()+
+  coord_flip()
+
+```
+
+```{r}
 #| label: polytomous-models-cummulative-disrespect
 
 model <- polr(disrespct ~ sex, data = final_nhis)
