@@ -26,6 +26,7 @@ risk for depression)
 - for sexual orientation 95% of the respondents identified themselves as straight, while less than two percent of the population identified with the each of the remaining options
 -
 
+# Dtandard deviation of change
 
 ```{r}
 #| label: prop-tables
@@ -41,7 +42,7 @@ prop.table(table(depressed_sample$sexual_orientation))
 
 table(final_nhis$phq2_screener_result, final_nhis$sex, final_nhis$hisprace, final_nhis$sexual_orientation)
 
-table(depressed_sample$sex, depressed_sample$sexual_orientation, depressed_sample$hisprace)
+# table(depressed_sample$sex, depressed_sample$sexual_orientation, depressed_sample$hisprace)
 ```
 
 
@@ -51,6 +52,10 @@ table(depressed_sample$sex, depressed_sample$sexual_orientation, depressed_sampl
 
 # Histogram of distribution of summated with fill as phq2 screener result
 ggplot(final_nhis, aes(x = summated, fill = phq2_screener_result))+
+  geom_histogram()+
+  theme_bw()
+
+ggplot(depressed_sample, aes(x = summated, fill = sexual_orientation))+
   geom_histogram()+
   theme_bw()
 
@@ -74,7 +79,7 @@ ggplot(final_nhis, aes(x = summated, y = phq2_screener_result, color = sexual_or
   facet_wrap(~hisprace)+
   geom_jitter()
 
-ggplot(final_nhis, aes(x = vig_summated, y = dis_summated, color = phq2_screener_result))+
+ggplot(final_nhis, aes(x = caution_scale, y = prejudice_scale, color = phq2_screener_result))+
   geom_point()+
   geom_smooth()+
   theme_bw()
@@ -100,11 +105,11 @@ corrgram(numeric, upper.panel="panel.cor", order = TRUE)
 # Models
 
 ```{r}
-#| label: logit_model_without_survey_design_stuff_dis_summated
+#| label: logit_model_without_survey_design_stuff_prejudice_scale
 
-model <- glm(phq2_screener_result ~ dis_summated, data = final_nhis, family = binomial(logit))
-model1 <- glm(phq2_screener_result ~ dis_summated + sex + hisprace + sexual_orientation, data = final_nhis, family = binomial(logit))
-# model2 <- glm(phq2_screener_result ~ dis_summated*sex*hisprace*sexual_orientation, data = final_nhis, family = binomial(logit))
+model <- glm(phq2_screener_result ~ prejudice_scale, data = final_nhis, family = binomial(logit))
+model1 <- glm(phq2_screener_result ~ prejudice_scale + sex + hisprace + sexual_orientation, data = final_nhis, family = binomial(logit))
+# model2 <- glm(phq2_screener_result ~ prejudice_scale*sex*hisprace*sexual_orientation, data = final_nhis, family = binomial(logit))
 modelsummary(list(model, model1), stars = TRUE)
 ```
 
@@ -117,12 +122,16 @@ model2 <- glm(phq2_screener_result ~ summated + sex + hisprace + sexual_orientat
 # model3 <- glm(phq2_screener_result ~ summated*sex*hisprace*sexual_orientation, data = final_nhis, family = binomial(logit))
 modelsummary(list(model, model2), stars = TRUE)
 ```
+# THIS ONE I THINK
+For interpreting scales, one standard deviation of change in a scale is associated with change in odds
+- TODO: explore marginal effects and predicts
+
 ```{r}
 #| label: BIC-comparisons-scales
 model.demographics <- glm(phq2_screener_result ~ sex + sexual_orientation + hisprace, 
                           data = final_nhis, family = binomial(logit))
-model.discrimination <- update(model.demographics, .~. + dis_summated)
-model.vigilence <- update(model.demographics, .~. + vig_summated)
+model.discrimination <- update(model.demographics, .~. + prejudice_scale)
+model.vigilence <- update(model.demographics, .~. + caution_scale)
 model.summated <- update(model.demographics, .~. + summated)
 
 modelsummary(list(model.demographics, model.discrimination, model.vigilence, model.summated),
@@ -137,7 +146,7 @@ modelsummary(list(model.demographics, model.discrimination, model.vigilence, mod
 model <- polr(disrespct ~ sex, data = final_nhis)
 model1 <- update(model, .~. + sexual_orientation)
 
-modelsummary(list(model, model_1), stars = TRUE)
+modelsummary(list(model, model1), stars = TRUE)
 ```
 
 ```{r}
@@ -155,6 +164,7 @@ modelsummary(list(model, model1, model2),
 ```
 
 
+# 
 ```{r}
 #| label: poly-models-
 

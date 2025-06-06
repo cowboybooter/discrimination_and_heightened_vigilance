@@ -364,18 +364,18 @@ nhis$summated <- scale(nhis$disrespct.z+
 ```
 
 ```{r}
-#| label: vigilance-summated
+#| label: factor-loading-vig-without-vig-insult-summated
 
-nhis$vig_summated <- scale(nhis$viginsult.z+
-                             nhis$vigappear.z+
+nhis$caution_scale <- scale(nhis$vigappear.z+
                              nhis$vigsay.z+
                              nhis$vigavoid.z)
 ```
 
 ```{r}
-#| label: discrimination-summated
+#| label: factor-loadingdiscrimination-and-viginsult-summated
 
-nhis$dis_summated <- scale(nhis$disrespct.z+
+nhis$prejudice_scale <- scale(nhis$viginsult.z+
+                             nhis$disrespct.z+
                              nhis$disserv.z+
                              nhis$dissmart.z+
                              nhis$disfear.z)
@@ -390,7 +390,7 @@ final_nhis <- nhis |>
   dplyr::select(sex, hisprace, sexual_orientation,
          disrespct, disserv, dissmart, disfear, disthreat, 
          viginsult, vigappear, vigsay, vigavoid, 
-         summated, vig_summated, dis_summated,
+         summated, caution_scale, prejudice_scale,
          phq2_screener_result)|>
   drop_na()
 ```
