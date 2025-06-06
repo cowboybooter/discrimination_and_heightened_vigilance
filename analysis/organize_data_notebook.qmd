@@ -1,5 +1,5 @@
 ---
-title: "Organize Data Notebook"
+title: "Organize Exploration Data Notebook"
 ---
 
 ```{r}

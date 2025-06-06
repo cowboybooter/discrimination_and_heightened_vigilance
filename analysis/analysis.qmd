@@ -24,9 +24,8 @@ load(here("data", "data_constructed", "analytical_data.RData"))
 - 6% of the data shows positive phq2 screener (and there for at 
 risk for depression)
 - for sexual orientation 95% of the respondents identified themselves as straight, while less than two percent of the population identified with the each of the remaining options
--
-
-# Dtandard deviation of change
+- the proportion of non-straight sexual orientations are larger in the depressed population
+- Interaction of all three of sex, race, sexual_orientation leads to singleton 
 
 ```{r}
 #| label: prop-tables
