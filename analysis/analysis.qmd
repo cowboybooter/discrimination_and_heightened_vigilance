@@ -90,6 +90,7 @@ ggplot(final_nhis, aes(x = caution_scale, y = prejudice_scale, color = phq2_scre
 #| label: co-linearity-visuals
 
 numeric <- final_nhis |>
+  dplyr::select(-age)|>
   mutate(
     disrespct = as.numeric(disrespct),
     disserv = as.numeric(disserv),
@@ -135,11 +136,13 @@ For interpreting scales, one standard deviation of change in a scale is associat
 Insights
 - Change of effect when taking into consideration of discrimination, vigilience, and summated scales
   - sexFemale affect peaks when taking into consideration the prejudice scale at exp(.107) odds greater than men
-  - [TODO]
+  - when accounting for the scales, the affect of Black disappates
+  - some of the affect of bisexualiy and other sexualities is accounted for by discrimintaion but not all
+  - the affects of accounting for scales has no impact of the odds a person who identified with Asian, and in general they are less likely to have a positive depression screener result
 
 ```{r}
 #| label: BIC-comparisons-scales
-model.demographics <- glm(phq2_screener_result ~ sex + sexual_orientation + hisprace, 
+model.demographics <- glm(phq2_screener_result ~ sex + sexual_orientation + hisprace + I(age-18) + (I(age-18))^2, 
                           data = final_nhis, family = binomial(logit))
 model.discrimination <- update(model.demographics, .~. + prejudice_scale)
 model.vigilence <- update(model.demographics, .~. + caution_scale)
@@ -166,9 +169,14 @@ predict_vigilence <- avg_predictions(model.vigilence, variables = "hisprace") |>
   as_tibble() |>
   mutate(model = "vigilence control")
 
+predict_summated <- avg_predictions(model.summated, variables = "hisprace")|>
+  as_tibble() |>
+  mutate(model = "summated control")
+
 predict_baseline |>
   bind_rows(predict_discrimination) |>
-  #bbind_rows(predict_vigilence)|>
+  # bind_rows(predict_vigilence)|>
+  bind_rows(predict_summated) |>
   ggplot(aes(x = hisprace, y = estimate, color = model))+
   geom_point()+
   coord_flip()
@@ -218,9 +226,14 @@ predict_vigilence <- avg_predictions(model.vigilence, variables = "sexual_orient
   as_tibble() |>
   mutate(model = "vigilence control")
 
+predict_summated <- avg_predictions(model.summated, variables = "sexual_orientation")|>
+  as_tibble() |>
+  mutate(model = "summated control")
+
 predict_baseline |>
   bind_rows(predict_discrimination) |>
   bind_rows(predict_vigilence)|>
+  bind_rows(predict_summated) |>
   ggplot(aes(x = sexual_orientation, y = estimate, color = model))+
   geom_point()+
   coord_flip()
@@ -228,10 +241,12 @@ predict_baseline |>
 ```
 
 # Poly - models
+Could be useful for information on scoring on specific quesions by demographic information
+
 ```{r}
 #| label: polytomous-models-cummulative-disrespect
 
-model <- polr(disrespct ~ sex, data = final_nhis)
+model <- polr(disrespct ~ disrespct, data = final_nhis)
 model1 <- update(model, .~. + sexual_orientation)
 
 modelsummary(list(model, model1), stars = TRUE)

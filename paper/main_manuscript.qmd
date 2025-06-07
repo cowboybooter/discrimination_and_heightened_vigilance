@@ -32,7 +32,9 @@ source(here("utils","functions.R"))
 
 # Introduction
 
-This quarto doc is for writing the manuscript. This is a test citation [@alba1990].
+In the 2023 [National Health Interview Survey](https://nhis.ipums.org/nhis/), survey questions attempting to capture a rough frequency of experienced discrimination and instances of practiced vigilance, in addition to the PHQ2 screener questions, were asked to American adults, nationwide. With this data, this paper seeks to answer the questions, how do discrimination and perceived threat affect the depression screener (PHQ-2) result and do discrimination and perceived threat account for depression in minority populations? 
+
+Social determinates of health reduce health risk to inclusion in demographic categories. This paper seeks to quantitatively complicate understanding of social determinates of health through 2023 NHIS data on discrimination and heightened vigilence in relation to depression screener (PHQ-2) results. With this, shifting causal understandings of social determinates of health from inclusion in demographic category to a more complex understanding including experienced discrimination and percieved threat implicitly shifts the stigma away from the individual.
 
 # Data and Methods
 

@@ -387,7 +387,7 @@ select data
 #| include: true
 
 final_nhis <- nhis |>
-  dplyr::select(sex, hisprace, sexual_orientation,
+  dplyr::select(sex, hisprace, sexual_orientation, age,
          disrespct, disserv, dissmart, disfear, disthreat, 
          viginsult, vigappear, vigsay, vigavoid, 
          summated, caution_scale, prejudice_scale,
