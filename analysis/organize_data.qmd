@@ -342,17 +342,17 @@ alpha(cor(factor_1))
 ```{r}
 #| label: one_factor
 
-nhis$disrespct.z <- scale(as.numeric(nhis$disrespct)) 
-nhis$disserv.z <- scale(as.numeric(nhis$disserv))
-nhis$dissmart.z <- scale(as.numeric(nhis$dissmart))
-nhis$disfear.z <- scale(as.numeric(nhis$disfear))
-nhis$disthreat.z <- scale(as.numeric(nhis$disthreat))
-nhis$viginsult.z <- scale(as.numeric(nhis$viginsult))
-nhis$vigappear.z <- scale(as.numeric(nhis$vigappear))
-nhis$vigsay.z <- scale(as.numeric(nhis$vigsay))
-nhis$vigavoid.z <- scale(as.numeric(nhis$vigavoid))
+nhis$disrespct.z <- standardize(as.numeric(nhis$disrespct)) 
+nhis$disserv.z <- standardize(as.numeric(nhis$disserv))
+nhis$dissmart.z <- standardize(as.numeric(nhis$dissmart))
+nhis$disfear.z <- standardize(as.numeric(nhis$disfear))
+nhis$disthreat.z <- standardize(as.numeric(nhis$disthreat))
+nhis$viginsult.z <- standardize(as.numeric(nhis$viginsult))
+nhis$vigappear.z <- standardize(as.numeric(nhis$vigappear))
+nhis$vigsay.z <- standardize(as.numeric(nhis$vigsay))
+nhis$vigavoid.z <- standardize(as.numeric(nhis$vigavoid))
 
-nhis$summated <- scale(nhis$disrespct.z+
+nhis$summated <- standardize(nhis$disrespct.z+
                          nhis$disserv.z+
                          nhis$dissmart.z+
                          nhis$disfear.z+
@@ -366,7 +366,7 @@ nhis$summated <- scale(nhis$disrespct.z+
 ```{r}
 #| label: factor-loading-vig-without-vig-insult-summated
 
-nhis$caution_scale <- scale(nhis$vigappear.z+
+nhis$caution_scale <- standardize(nhis$vigappear.z+
                              nhis$vigsay.z+
                              nhis$vigavoid.z)
 ```
@@ -374,7 +374,7 @@ nhis$caution_scale <- scale(nhis$vigappear.z+
 ```{r}
 #| label: factor-loadingdiscrimination-and-viginsult-summated
 
-nhis$prejudice_scale <- scale(nhis$viginsult.z+
+nhis$prejudice_scale <- standardize(nhis$viginsult.z+
                              nhis$disrespct.z+
                              nhis$disserv.z+
                              nhis$dissmart.z+
