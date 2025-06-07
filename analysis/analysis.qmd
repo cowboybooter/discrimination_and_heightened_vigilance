@@ -43,6 +43,9 @@ table(final_nhis$phq2_screener_result, final_nhis$sex, final_nhis$hisprace, fina
 
 # table(depressed_sample$sex, depressed_sample$sexual_orientation, depressed_sample$hisprace)
 ```
+# Some visuals (exploratory)
+- summated scale is a exponential distribution for both the full sample and the individuals with positive depression risk
+- positive depression risk seems to have a higher intercept, but realitive parallel coefficients which indicate an increase in caution is related to an increase on prejudice.
 
 
 
