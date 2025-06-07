@@ -238,12 +238,12 @@ Transforming variables into factor variables
 
 nhis <- nhis|>
   mutate(sex = factor(x = sex, levels = c("male", "female")),
-         sexual_orientation = factor(sexual_orientation, levels = c("Lesbian or gay",
-                                                                    "Straight, that is, not lesbian or gay",
+         sexual_orientation = factor(sexual_orientation, levels = c("Straight, that is, not lesbian or gay",
+                                                                    "Lesbian or gay",
                                                                     "Bisexual",
                                                                     "Something else")),
-         hisprace = factor(hisprace, levels = c("Hispanic", 
-                                                "Non-Hispanic White",
+         hisprace = factor(hisprace, levels = c("Non-Hispanic White",
+                                                "Hispanic", 
                                                 "Non-Hispanic Black/African American",
                                                 "Non-Hispanic Asian",
                                                 "Non-Hispanic American Indian/Alaskan Native",

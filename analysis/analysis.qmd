@@ -124,9 +124,18 @@ model2 <- glm(phq2_screener_result ~ summated + sex + hisprace + sexual_orientat
 # model3 <- glm(phq2_screener_result ~ summated*sex*hisprace*sexual_orientation, data = final_nhis, family = binomial(logit))
 modelsummary(list(model, model2), stars = TRUE)
 ```
-# THIS ONE I THINK
+# THIS ONE 
 For interpreting scales, one standard deviation of change in a scale is associated with change in odds
 - TODO: explore marginal effects and predicts
+-The first model is representative of log odds by demographics (without interaction terms)
+- References: sexMale, non-hispanic white, straight
+-The second model takes into consideration a scale (TODO: rename prejudice_summated to something better)
+  -Interpretation: For one standard deviation increase in the predjudice scale...
+
+Insights
+- Change of effect when taking into consideration of discrimination, vigilience, and summated scales
+  - sexFemale affect peaks when taking into consideration the prejudice scale at exp(.107) odds greater than men
+  - [TODO]
 
 ```{r}
 #| label: BIC-comparisons-scales
@@ -143,7 +152,8 @@ modelsummary(list(model.demographics, model.discrimination, model.vigilence, mod
 
 
 ```{r}
-library(marginaleffects)
+#| label: fig-marginal-effects-by-race
+
 predict_baseline <- avg_predictions(model.demographics, variables = "hisprace") |>
   as_tibble() |>
   mutate(model = "baseline")
@@ -152,14 +162,72 @@ predict_discrimination <- avg_predictions(model.discrimination, variables = "his
   as_tibble() |>
   mutate(model = "discrimination control")
 
+predict_vigilence <- avg_predictions(model.vigilence, variables = "hisprace") |>
+  as_tibble() |>
+  mutate(model = "vigilence control")
+
 predict_baseline |>
   bind_rows(predict_discrimination) |>
+  #bbind_rows(predict_vigilence)|>
   ggplot(aes(x = hisprace, y = estimate, color = model))+
   geom_point()+
   coord_flip()
 
 ```
+```{r}
+#| label: fig-marginal-effects-by-sex
 
+predict_baseline <- avg_predictions(model.demographics, variables = "sex") |>
+  as_tibble() |>
+  mutate(model = "baseline")
+
+predict_discrimination <- avg_predictions(model.discrimination, variables = "sex") |>
+  as_tibble() |>
+  mutate(model = "discrimination control")
+
+predict_vigilence <- avg_predictions(model.vigilence, variables = "sex") |>
+  as_tibble() |>
+  mutate(model = "vigilence control")
+
+predict_summated <- avg_predictions(model.summated, variables = "sex")|>
+  as_tibble() |>
+  mutate(model = "summated control")
+
+predict_baseline |>
+  bind_rows(predict_discrimination) |>
+  bind_rows(predict_vigilence)|>
+  bind_rows(predict_summated) |>
+  ggplot(aes(x = sex, y = estimate, color = model))+
+  geom_point()+
+  coord_flip()
+
+```
+
+```{r}
+#| label: fig-marginal-effects-by-sexual-orientation
+
+predict_baseline <- avg_predictions(model.demographics, variables = "sexual_orientation") |>
+  as_tibble() |>
+  mutate(model = "baseline")
+
+predict_discrimination <- avg_predictions(model.discrimination, variables = "sexual_orientation") |>
+  as_tibble() |>
+  mutate(model = "discrimination control")
+
+predict_vigilence <- avg_predictions(model.vigilence, variables = "sexual_orientation") |>
+  as_tibble() |>
+  mutate(model = "vigilence control")
+
+predict_baseline |>
+  bind_rows(predict_discrimination) |>
+  bind_rows(predict_vigilence)|>
+  ggplot(aes(x = sexual_orientation, y = estimate, color = model))+
+  geom_point()+
+  coord_flip()
+
+```
+
+# Poly - models
 ```{r}
 #| label: polytomous-models-cummulative-disrespect
 
