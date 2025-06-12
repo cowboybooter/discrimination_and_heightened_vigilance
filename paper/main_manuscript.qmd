@@ -37,9 +37,9 @@ load(here("data", "data_constructed", "analytical_data.RData")) # final_nhis
 
 # Introduction
 
-In the 2023 [National Health Interview Survey](https://nhis.ipums.org/nhis/), survey questions attempting to capture a rough frequency of experienced discrimination and instances of practiced vigilance, in addition to the PHQ2 screener questions, were asked to American adults, nationwide (@nhisDesc). With this data, this paper seeks to answer the questions, how do discrimination and perceived threat affect the depression screener (PHQ-2) result and do discrimination and perceived threat account for depression in minority groups? 
+In 2023 the National Center for Health Statistic conducted a survey of American adults to capture a rough frequency of experienced discrimination and instances of practiced vigilance, in addition to the depression screener Public Health Questionnaire 2 (PHQ2) (@nhisDesc); this is a portion of the [National Health Interview Survey](https://nhis.ipums.org/nhis/) (NHIS). With this data, this paper seeks to answer the questions, how do discrimination and perceived threat affect the depression screener (PHQ2) result and do discrimination and perceived threat account for depression in minority groups? 
 
-Social determinates of health reduce health risk to inclusion in demographic categories. This paper seeks to quantitatively complicate understanding of social determinates of health through 2023 NHIS data on discrimination and heightened vigilance in relation to depression screener (PHQ-2) results. With this, shifting causal understandings of social determinates of health from inclusion in demographic category to a more complex understanding including experienced discrimination and percieved threat implicitly shifts the stigma away from the individual.
+Social determinates of health are inappropriately simplified to inclusion in demographic categories. This paper seeks to quantitatively complicate understanding of social determinates of health through 2023 NHIS data on discrimination and heightened vigilance in relation to depression screener (PHQ2) results. Thus, this paper is an attempt shifting causal understandings of social determinates of health from inclusion in demographic categories to a more complex understanding including experienced discrimination and percieved threat.
 
 # Data and Methods
 
@@ -47,11 +47,11 @@ The data used in this paper were extracted from the [National Health Interview S
 The data were usually conducted in-person, at 2,500 residences in each geographically clustered areas,
 for a representative sample of the United States (@nhisDesc). The data were conducted year-round, with a nationally representative sample
 collected monthly. The data were self-reported by the participants (@nhisDesc). Additionally, the data are generalizable to the
-national level after correcting for aspects of research design, including the strata and PSUs (@nhisDesc).
+national level after correcting for aspects of research design, including the strata and primary sampling unite (@nhisDesc).
 
 The data used in analysis includes sample adults with complete cases and assumes missing responses are missing completely at random. The variables used included demographic information (including age centered on 18, sex, combined race and ethnicity, and sexual orientation), included questions attempting to capture discrimination (which centered disrespect, poor customer service, ascribed unintellegence, ascribed threat, and harassment as experienced by the individual), included questions attempting to capture heightened vigilance (which centered anticipation of insults, appearance, self-censoring of language, and avoidance of circumstances and places) and a binary PQH2 screener result. The discrimination and heightened vigilance questions were captured in a Likert scale, which for the purposes of this paper were factored and used as numeric variables. These variables were standardized and combined into a standardized summated scale (Chronbach's alpha = 0.799715). While factor analysis shows that further factoring decreases Chronbach's alpha (for two factors, alpha = 0.7016695), it is useful for analysis to create a discrimination and a vigilance scale. Through factor analysis the vigilance question attempting to capture bracing for insult loaded onto the discrimination variables, so the discrimination scale includes that vigilance variable, while the vigilance scale contains the remainder of the vigilance questions. 
 
-[TODO: Serious discussion of any limitations in the data or methods should be provided and how such weaknesses were addressed in the analysis (or highlighting potential biases in results if they could not be addressed)]
+The PHQ2 screener is comprised of two questions used to assess whether an individual should be evaluated for depression, thus a limitation of the study is the sensitivity of the PHQ2 screener. Addtionally, answers of "unknown" or "not ascertained" were identified as missing and case-wise deletion was performed, which assumes that these are missing completely at random. The NHIS is administered by the National Center for Health Statistics within the federal institution of the Center for Disease Control. There may be biases present in the data that are a result of distrust of the federal government by individuals in minorities due to various systematic bigotry located within the federal government.
 
 For analysis, a binary logit model predicting PHQ2 result is used (see @tbl-main-models). The proportion of positive PHQ2 Screener results is about 6.8% in the sample.
 
@@ -87,27 +87,24 @@ modelsummary(list(model.demographics, model.discrimination, model.vigilence, mod
              stars = TRUE)
 
 ```
-
-[TODO: discuss the results of the analysis with respect to the research question, any tables or figures produced should be explained and discussed in the text]
-
-Model 1 in @tbl-main-models shows the log-odds of a positive PHQ2 result based on age, sex, sexual orientation, and combined race and ethnicity. In the remaining models, the model includes the log odds of a positive PHq2 result based on a standardized discrimination scale, a standardized vigilance scale, or a standardized scale containing both discrimination and vigilance.
+Model 1 in @tbl-main-models shows the log-odds of a positive PHQ2 result based on age, sex, sexual orientation, and combined race and ethnicity. In the remaining models, the model includes the log odds of a positive PHQ2 result based on a standardized discrimination scale, a standardized vigilance scale, or a standardized scale containing both discrimination and vigilance.
 
 ## Discrimination, heightened vigilance, and depression risk
 
-According to @tbl-main-models (model 2), a one standard deviation increase in discrimination scale score is associated with 0.565 log-odds (or 1.75 odds) in a positive PHQ2 result holding constant age, sex, and combined race and ethnicity.
-
-According to @tbl-main-models (model 3), a one standard deviation increase in vigilance scale score is associated with a 0.621 log odds (or 1.86 odds) of a positive PHQ2 result holding constant age, sex, and combined race and ethnicity.
-
-According to @tbl-main-models (model 4), a one standard deviation increase in a combined discrimination and vigilance scale ("summated") score is associated with a 0.648 log odds (or 1.91 odds) of a positive PHQ2 result holding constant age, sex, and combined race and ethnicity.
+According to @tbl-main-models (model 2), a one standard deviation increase in discrimination scale score is associated with 0.565 log-odds (or 1.75 odds) in a positive PHQ2 result holding constant age, sex, and combined race and ethnicity on average.
+According to @tbl-main-models (model 3), a one standard deviation increase in vigilance scale score is associated with a 0.621 log odds (or 1.86 odds) of a positive PHQ2 result holding constant age, sex, and combined race and ethnicity on average.
+According to @tbl-main-models (model 4), a one standard deviation increase in a combined discrimination and vigilance scale ("summated") score is associated with a 0.648 log odds (or 1.91 odds) of a positive PHQ2 result holding constant age, sex, and combined race and ethnicity on average. 
+This model indicate a positive association between discrimination / perceived threat and positive PHQ2 screener results.
 
 ## Depression risk and demographics
 
 Model 1 of @tbl-main-models attributes a difference of log odds of a positive PHQ2 result between a male person who is also white and straight and the indicated categories without holding constant any discrimination and/or vigilance scales. 
 
-For female individuals, the log-odds of having a positive PHQ2 result moves from 0.083 (or 1.087 odds) to 0.095 (or 1.10 odds) when holding constant discrimination scale, to 0.057 (or 1.06 odds) when holding constant vigilance scale.
+For female individuals on average, the log-odds of having a positive PHQ2 result moves from 0.083 (or 1.087 odds) to 0.095 (or 1.10 odds) when holding the constant discrimination scale, to 0.057 (or 1.06 odds) when holding constant the vigilance scale. While the vigilance variables account for some of the odds of a positive PHQ2 result and reducing it by a couple percentage points, controlling for discrimination increases the odds of a positive PHQ2 result (see @fig-effects-by-sex).
 
 ```{r}
-#| label: fig-marginal-effects-by-sex
+#| label: fig-effects-by-sex
+#| fig-cap: Odds of positive PHQ2 result by sex for each model; @nhisData
 
 predict_baseline <- avg_predictions(model.demographics, variables = "sex") |>
   as_tibble() |>
@@ -129,16 +126,22 @@ predict_baseline |>
   bind_rows(predict_discrimination) |>
   bind_rows(predict_vigilence)|>
   bind_rows(predict_summated) |>
-  ggplot(aes(x = sex, y = estimate, color = model))+
+  ggplot(aes(x = sex, y = exp(estimate), color = model, shape = model))+
   geom_point()+
-  coord_flip()
+  scale_x_discrete(labels = c("male", "female"))+
+  labs(x = "Sex",
+       y = "Odds")+
+  coord_flip()+ 
+  theme_bw()
 
 ```
 
-For black individuals, the discrimination, vigilance, and combined scales account for the log-odds of a postive PHQ2 screener result.
+For black individuals, the discrimination, vigilance, and combined scales account for the odds of a positive PHQ2 result (see @fig-effects-by-race). Additionally, these scales account for some of the odds of a positive PHQ2 result for indigenous and multiracial indigenous individuals. Individuals who self-identified as Asian in this survey have lower odds of a positive PHQ2 result than individuals who identify in any of the other race and ethnicity.
 
 ```{r}
-#| label: fig-marginal-effects-by-race
+#| label: fig-effects-by-race
+#| fig-cap: Odds of positive PHQ2 result by combined race and ethnicity for each model; @nhisData
+
 
 predict_baseline <- avg_predictions(model.demographics, variables = "hisprace") |>
   as_tibble() |>
@@ -158,18 +161,30 @@ predict_summated <- avg_predictions(model.summated, variables = "hisprace")|>
 
 predict_baseline |>
   bind_rows(predict_discrimination) |>
-  # bind_rows(predict_vigilence)|>
+  bind_rows(predict_vigilence)|>
   bind_rows(predict_summated) |>
-  ggplot(aes(x = hisprace, y = estimate, color = model))+
+  ggplot(aes(x = hisprace, y = exp(estimate), color = model, shape = model))+
+    scale_x_discrete(labels = c("White", 
+                                "Hispanic",
+                                "Black",
+                                "Asian",
+                                "Indigenous",
+                                "Indigenous and other group",
+                                "Bi or Multiracial"))+
+
   geom_point()+
-  coord_flip()
+  labs(x =  "Combined race and ethnicity",
+       y = "Odds")+
+  coord_flip()+
+  theme_bw()
 
 ```
 
-For individuals who identify with the sexual orientations other than straight, the inclusion of discrimination, vigilance, or combined scales account for only a portion of their log-odds of having a positive PHQ2 screener result.
+For individuals who identify with the sexual orientations other than straight, the inclusion of discrimination, vigilance, or combined scales account for a portion of their odds of having a positive PHQ2 result (see @fig-effects-by-sexual-orientation).
 
 ```{r}
-#| label: fig-marginal-effects-by-sexual-orientation
+#| label: fig-effects-by-sexual-orientation
+#| fig-cap: Odds of positive PHQ2 result by sexual orientation for each model; @nhisData
 
 predict_baseline <- avg_predictions(model.demographics, variables = "sexual_orientation") |>
   as_tibble() |>
@@ -191,12 +206,14 @@ predict_baseline |>
   bind_rows(predict_discrimination) |>
   bind_rows(predict_vigilence)|>
   bind_rows(predict_summated) |>
-  ggplot(aes(x = sexual_orientation, y = estimate, color = model))+
+  ggplot(aes(x = sexual_orientation, y = exp(estimate), color = model, shape = model))+
   geom_point()+
-  coord_flip()
-
+  labs(x = "Sexual orientation",
+       y = "Odds")+
+  coord_flip()+
+  theme_bw()
 ```
 
 # Conclusions
 
-[TODO: re-iterate the research question and explain how the foregoing analysis answered the question, point out weaknesses in the analysis, and suggest future research directions.]
+Using data from the National Health Interview Survey (@nhisData) and a binomial logit model which predicts log-odds of a PHQ2 screener result, this paper concludes that there is a positive association between discrimintation and heightened vigilance variables and positive PHQ2 screener results. Additionally,the introduction of variables accounting for discrimination, heightened vigilance, and a combined variable accounts for some of the odds some minority groups face, with different interpretation. For Black individuals in America, accounting for discrimination and vigilance completely negates the difference in odds of a positive PHQ2 screener result between white and Black Americans. Future research should aim to include a better variable for depression, as this analysis deprends on the sensitivity and accuracy of a PHQ2 screener, should aim to capture interaction terms, should complicate the position of this survey as administered by a federal institution, and or seek to account for the remaining difference in odds for clinical depression.
