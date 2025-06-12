@@ -5,9 +5,11 @@ title: "Organize Exploration Data Notebook"
 ```{r}
 #| label: setup
 #| include: false
+
 library(here)
 source(here("utils","check_packages.R"))
 source(here("utils","functions.R"))
+load(here("data", "data_constructed", "analytical_data.RData"))
 ```
 
 This quarto doc is used to organize the data.
@@ -155,10 +157,10 @@ symnum(c1)
 #| include: true
 
 
-nhis |> 
+final_nhis |> 
   select_if(is.factor)
 
-numeric <- nhis |>
+numeric <- final_nhis |>
   select_if(is.factor)|>
   mutate(
     disrespct = as.numeric(disrespct),
@@ -170,7 +172,7 @@ numeric <- nhis |>
     vigsay = as.numeric(vigsay),
     vigavoid = as.numeric(vigavoid),
   )|>
-  select(disrespct, disserv, disfear, disthreat, viginsult, vigappear, vigsay, vigavoid)
+  dplyr::select(disrespct, disserv, disfear, disthreat, viginsult, vigappear, vigsay, vigavoid)
 
 corrgram(numeric, upper.panel="panel.cor", order = TRUE)
 ```
@@ -185,11 +187,21 @@ fa2 <- fa(numeric_r, 2)
 fa3 <- fa(numeric_r, 3)
 fa4 <- fa(numeric_r, 4)
 
-# loadings(fa1)
+loadings(fa1)
 loadings(fa2)
 # loadings(fa3)
 # loadings(fa4)
 fa.diagram(fa2)
+
+psych::alpha(disrespct.z, 
+             disserv.z, 
+             dissmart.z,
+             disfear.z,
+             disthreat.z, 
+             viginsult.z,
+             vigappear.z,
+             vigsay.z,      
+             vigavoid.z)
 
 ```
 

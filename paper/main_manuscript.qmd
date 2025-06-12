@@ -1,8 +1,7 @@
 ---
-title: "Paper Manuscript"
-shorttitle: "Paper"
-abstract: An Abstract
-keywords: [keyword1, keyword2]
+title: "Depression, discrimination, and heightened vigilance in 2023 National Health Interview Survey"
+shorttitle: "Depression, discrimination, and heightened vigilance"
+keywords: [depression, discrimination, vigilance]
 thanks: Thanks to everyone for checking this out.
 reference-section-title: References
 bibliography: ../bibliography/project.bib
@@ -30,20 +29,174 @@ source(here("utils","check_packages.R"))
 source(here("utils","functions.R"))
 ```
 
+```{r}
+#| label: loading-data
+#| include: false
+load(here("data", "data_constructed", "analytical_data.RData")) # final_nhis
+```
+
 # Introduction
 
-In the 2023 [National Health Interview Survey](https://nhis.ipums.org/nhis/), survey questions attempting to capture a rough frequency of experienced discrimination and instances of practiced vigilance, in addition to the PHQ2 screener questions, were asked to American adults, nationwide. With this data, this paper seeks to answer the questions, how do discrimination and perceived threat affect the depression screener (PHQ-2) result and do discrimination and perceived threat account for depression in minority populations? 
+In the 2023 [National Health Interview Survey](https://nhis.ipums.org/nhis/), survey questions attempting to capture a rough frequency of experienced discrimination and instances of practiced vigilance, in addition to the PHQ2 screener questions, were asked to American adults, nationwide (@nhisDesc). With this data, this paper seeks to answer the questions, how do discrimination and perceived threat affect the depression screener (PHQ-2) result and do discrimination and perceived threat account for depression in minority groups? 
 
-Social determinates of health reduce health risk to inclusion in demographic categories. This paper seeks to quantitatively complicate understanding of social determinates of health through 2023 NHIS data on discrimination and heightened vigilence in relation to depression screener (PHQ-2) results. With this, shifting causal understandings of social determinates of health from inclusion in demographic category to a more complex understanding including experienced discrimination and percieved threat implicitly shifts the stigma away from the individual.
+Social determinates of health reduce health risk to inclusion in demographic categories. This paper seeks to quantitatively complicate understanding of social determinates of health through 2023 NHIS data on discrimination and heightened vigilance in relation to depression screener (PHQ-2) results. With this, shifting causal understandings of social determinates of health from inclusion in demographic category to a more complex understanding including experienced discrimination and percieved threat implicitly shifts the stigma away from the individual.
 
 # Data and Methods
 
 The data used in this paper were extracted from the [National Health Interview Survey](https://nhis.ipums.org/nhis/), via IPUMS Health Survey.
 The data were usually conducted in-person, at 2,500 residences in each geographically clustered areas,
-for a representative sample of the United States. The data were conducted year-round, with a nationally representative sample
-collected monthly. The data were self-reported by the participants. Additionally, the data are generalizable to the
-national level after correcting for aspects of research design, including the strata and PSUs.
+for a representative sample of the United States (@nhisDesc). The data were conducted year-round, with a nationally representative sample
+collected monthly. The data were self-reported by the participants (@nhisDesc). Additionally, the data are generalizable to the
+national level after correcting for aspects of research design, including the strata and PSUs (@nhisDesc).
+
+The data used in analysis includes sample adults with complete cases and assumes missing responses are missing completely at random. The variables used included demographic information (including age centered on 18, sex, combined race and ethnicity, and sexual orientation), included questions attempting to capture discrimination (which centered disrespect, poor customer service, ascribed unintellegence, ascribed threat, and harassment as experienced by the individual), included questions attempting to capture heightened vigilance (which centered anticipation of insults, appearance, self-censoring of language, and avoidance of circumstances and places) and a binary PQH2 screener result. The discrimination and heightened vigilance questions were captured in a Likert scale, which for the purposes of this paper were factored and used as numeric variables. These variables were standardized and combined into a standardized summated scale (Chronbach's alpha = 0.799715). While factor analysis shows that further factoring decreases Chronbach's alpha (for two factors, alpha = 0.7016695), it is useful for analysis to create a discrimination and a vigilance scale. Through factor analysis the vigilance question attempting to capture bracing for insult loaded onto the discrimination variables, so the discrimination scale includes that vigilance variable, while the vigilance scale contains the remainder of the vigilance questions. 
+
+[TODO: Serious discussion of any limitations in the data or methods should be provided and how such weaknesses were addressed in the analysis (or highlighting potential biases in results if they could not be addressed)]
+
+For analysis, a binary logit model predicting PHQ2 result is used (see @tbl-main-models). The proportion of positive PHQ2 Screener results is about 6.8% in the sample.
 
 # Results
 
+```{r}
+#| label: tbl-main-models
+#| tbl-cap: Logit models predicting PHQ2 results with log-odds of (1) demographics, (2) discrimination scale, (3) vigilance scale, (4) summated scale;  Data Source is National Center for Health Statistics, National Health Interview Survey, 2023.
+
+model.demographics <- glm(phq2_screener_result ~ + I(age-18) + (I(age-18))^2 +sex + sexual_orientation + hisprace, 
+                          data = final_nhis, family = binomial(logit))
+model.discrimination <- update(model.demographics, .~. + prejudice_scale)
+model.vigilence <- update(model.demographics, .~. + caution_scale)
+model.summated <- update(model.demographics, .~. + summated)
+
+modelsummary(list(model.demographics, model.discrimination, model.vigilence, model.summated),
+             coef_rename = c("(Intercept)" = "Intercept",
+                             "sexfemale" = "Female",
+                             "sexual_orientationLesbian or gay" = "Lesbian or Gay",
+                             "sexual_orientationBisexual" = "Bisexual",
+                             "sexual_orientationSomething else" = "Other Sexuality",
+                             "hispraceHispanic" = "Hispanic",
+                             "hispraceNon-Hispanic Black/African American" = "Black",
+                             "hispraceNon-Hispanic Asian" = "Asian",
+                             "hispraceNon-Hispanic American Indian/Alaskan Native" = "Indigenous",
+                             "hispraceNon-Hispanic American Indian/Alaskan Native and any other group" = "Indigenous and other group",
+                             "hispraceNon-Hispanic Other single and multiple races" = "Bi- or Multi-racial",
+                             "I(age - 18)" = "Age",
+                             "prejudice_scale" = "Discrimination Scale",
+                             "caution_scale" = "Vigilance Scale",
+                             "summated" = "Summated Scale"),
+             output = "gt",
+             stars = TRUE)
+
+```
+
+[TODO: discuss the results of the analysis with respect to the research question, any tables or figures produced should be explained and discussed in the text]
+
+Model 1 in @tbl-main-models shows the log-odds of a positive PHQ2 result based on age, sex, sexual orientation, and combined race and ethnicity. In the remaining models, the model includes the log odds of a positive PHq2 result based on a standardized discrimination scale, a standardized vigilance scale, or a standardized scale containing both discrimination and vigilance.
+
+## Discrimination, heightened vigilance, and depression risk
+
+According to @tbl-main-models (model 2), a one standard deviation increase in discrimination scale score is associated with 0.565 log-odds (or 1.75 odds) in a positive PHQ2 result holding constant age, sex, and combined race and ethnicity.
+
+According to @tbl-main-models (model 3), a one standard deviation increase in vigilance scale score is associated with a 0.621 log odds (or 1.86 odds) of a positive PHQ2 result holding constant age, sex, and combined race and ethnicity.
+
+According to @tbl-main-models (model 4), a one standard deviation increase in a combined discrimination and vigilance scale ("summated") score is associated with a 0.648 log odds (or 1.91 odds) of a positive PHQ2 result holding constant age, sex, and combined race and ethnicity.
+
+## Depression risk and demographics
+
+Model 1 of @tbl-main-models attributes a difference of log odds of a positive PHQ2 result between a male person who is also white and straight and the indicated categories without holding constant any discrimination and/or vigilance scales. 
+
+For female individuals, the log-odds of having a positive PHQ2 result moves from 0.083 (or 1.087 odds) to 0.095 (or 1.10 odds) when holding constant discrimination scale, to 0.057 (or 1.06 odds) when holding constant vigilance scale.
+
+```{r}
+#| label: fig-marginal-effects-by-sex
+
+predict_baseline <- avg_predictions(model.demographics, variables = "sex") |>
+  as_tibble() |>
+  mutate(model = "baseline")
+
+predict_discrimination <- avg_predictions(model.discrimination, variables = "sex") |>
+  as_tibble() |>
+  mutate(model = "discrimination control")
+
+predict_vigilence <- avg_predictions(model.vigilence, variables = "sex") |>
+  as_tibble() |>
+  mutate(model = "vigilence control")
+
+predict_summated <- avg_predictions(model.summated, variables = "sex")|>
+  as_tibble() |>
+  mutate(model = "summated control")
+
+predict_baseline |>
+  bind_rows(predict_discrimination) |>
+  bind_rows(predict_vigilence)|>
+  bind_rows(predict_summated) |>
+  ggplot(aes(x = sex, y = estimate, color = model))+
+  geom_point()+
+  coord_flip()
+
+```
+
+For black individuals, the discrimination, vigilance, and combined scales account for the log-odds of a postive PHQ2 screener result.
+
+```{r}
+#| label: fig-marginal-effects-by-race
+
+predict_baseline <- avg_predictions(model.demographics, variables = "hisprace") |>
+  as_tibble() |>
+  mutate(model = "baseline")
+
+predict_discrimination <- avg_predictions(model.discrimination, variables = "hisprace") |>
+  as_tibble() |>
+  mutate(model = "discrimination control")
+
+predict_vigilence <- avg_predictions(model.vigilence, variables = "hisprace") |>
+  as_tibble() |>
+  mutate(model = "vigilence control")
+
+predict_summated <- avg_predictions(model.summated, variables = "hisprace")|>
+  as_tibble() |>
+  mutate(model = "summated control")
+
+predict_baseline |>
+  bind_rows(predict_discrimination) |>
+  # bind_rows(predict_vigilence)|>
+  bind_rows(predict_summated) |>
+  ggplot(aes(x = hisprace, y = estimate, color = model))+
+  geom_point()+
+  coord_flip()
+
+```
+
+For individuals who identify with the sexual orientations other than straight, the inclusion of discrimination, vigilance, or combined scales account for only a portion of their log-odds of having a positive PHQ2 screener result.
+
+```{r}
+#| label: fig-marginal-effects-by-sexual-orientation
+
+predict_baseline <- avg_predictions(model.demographics, variables = "sexual_orientation") |>
+  as_tibble() |>
+  mutate(model = "baseline")
+
+predict_discrimination <- avg_predictions(model.discrimination, variables = "sexual_orientation") |>
+  as_tibble() |>
+  mutate(model = "discrimination control")
+
+predict_vigilence <- avg_predictions(model.vigilence, variables = "sexual_orientation") |>
+  as_tibble() |>
+  mutate(model = "vigilence control")
+
+predict_summated <- avg_predictions(model.summated, variables = "sexual_orientation")|>
+  as_tibble() |>
+  mutate(model = "summated control")
+
+predict_baseline |>
+  bind_rows(predict_discrimination) |>
+  bind_rows(predict_vigilence)|>
+  bind_rows(predict_summated) |>
+  ggplot(aes(x = sexual_orientation, y = estimate, color = model))+
+  geom_point()+
+  coord_flip()
+
+```
+
 # Conclusions
+
+[TODO: re-iterate the research question and explain how the foregoing analysis answered the question, point out weaknesses in the analysis, and suggest future research directions.]

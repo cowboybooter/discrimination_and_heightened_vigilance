@@ -211,7 +211,7 @@ nhis <- nhis |>
 ```
 
 Dealing with missingness (other than valid skip)
-- for first pass, I exclude all of responses containing unknown reason agnostic
+- case-wise deletion for all "Unknown" or "Not ascertained" responses
 
 ```{r}
 #| label: Deals with other types of missingness

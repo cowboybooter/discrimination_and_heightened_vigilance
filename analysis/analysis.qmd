@@ -127,7 +127,7 @@ modelsummary(list(model, model2), stars = TRUE)
 ```
 # THIS ONE 
 For interpreting scales, one standard deviation of change in a scale is associated with change in odds
-- TODO: explore marginal effects and predicts
+- explore marginal effects and predicts
 -The first model is representative of log odds by demographics (without interaction terms)
 - References: sexMale, non-hispanic white, straight
 -The second model takes into consideration a scale (TODO: rename prejudice_summated to something better)

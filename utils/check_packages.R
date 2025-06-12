@@ -9,11 +9,12 @@ packages = c(
   "here", # absolute requirement always
   "knitr", # for processing quarto
   "readr","haven", # I/O
-  "tidyverse","lubridate","broom", #tidyverse and friends
+  "tidyverse","lubridate","broom", "datawizard", #tidyverse and friends
   "modelsummary","gt", # for table output
   "corrgram", "psych", # for exploratory data org
   "marginaleffects", # for model visualization
   "MASS", "nnet" # for polytomous models
+  
 )
 
 package.check <- lapply(packages, FUN = function(x) {
